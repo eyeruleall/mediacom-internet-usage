@@ -1,0 +1,24 @@
+{
+  "name": "mediacom-internet-usage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyeruleall/mediacom-internet-usage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eyeruleall/mediacom-internet-usage/issues"
+  },
+  "homepage": "https://github.com/eyeruleall/mediacom-internet-usage#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "puppeteer": "^5.5.0"
+  }
+}

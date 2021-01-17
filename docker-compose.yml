@@ -1,0 +1,9 @@
+version: "3"
+services:
+  mediacom-usage:
+    build: "."
+    container_name: mediacom-usage
+    env_file: .env
+    # environment:
+    #   - MEDIACOM_USER=<username>@mediacombb.net
+    #   - MEDIACOM_PASS=<password>
