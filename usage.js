@@ -4,6 +4,11 @@ const puppeteer = require("puppeteer");
 if (!process.env.MEDIACOM_USER || !process.env.MEDIACOM_PASS)
   throw new Error("Mediacom User ID and Password must be set");
 
+if (!process.env.MEDIACOM_USER.includes("@mediacombb.net"))
+  throw new Error(
+    "Mediacom User ID must be in the form of <username>@mediacombb.net"
+  );
+
 (async () => {
   try {
     const browser = await puppeteer.launch({
@@ -12,16 +17,18 @@ if (!process.env.MEDIACOM_USER || !process.env.MEDIACOM_PASS)
     });
     const page = await browser.newPage();
 
-    await page.goto("https://support.mediacomcable.com/#!/Log/In", {
-      waitUntil: ["load", "domcontentloaded"],
-    });
+    await Promise.all([
+      page.waitForSelector("button[ng-click='GoToSSO()']"),
+      page.goto("https://support.mediacomcable.com/#!/Login", {
+        waitUntil: "domcontentloaded",
+      }),
+    ]);
 
     await Promise.all([
-      page.waitForNavigation({ waitUntil: ["load", "domcontentloaded"] }),
       page.waitForSelector('input[name="pf.username"]'),
       page.waitForSelector('input[name="pf.pass"]'),
       page.waitForSelector("#btnSignIn"),
-      page.click("login-form > div > div > div > div:nth-child(1) > button"),
+      page.click("button[ng-click='GoToSSO()']"),
     ]);
 
     await Promise.all([
