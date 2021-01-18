@@ -7,7 +7,7 @@ This package is used to scrape the usage data from mediacom's website.
 ##### Note: username must include @mediacombb.net
 
 ```
-docker exec -t --rm \
+docker run --rm \
 -e MEDIACOM_USER=<username> \
 -e MEDIACOM_PASS=<password> \
 eyeruleall/mediacom-internet-usage
