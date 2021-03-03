@@ -10,7 +10,9 @@ if (!process.env.MEDIACOM_USER.includes("@mediacombb.net"))
   );
 
 const username = process.env.MEDIACOM_USER;
-const password = process.env.MEDIACOM_PASS(async () => {
+const password = process.env.MEDIACOM_PASS;
+
+(async () => {
   try {
     const browser = await puppeteer.launch({
       // headless: true,
