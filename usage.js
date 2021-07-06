@@ -4,11 +4,6 @@ const puppeteer = require("puppeteer");
 if (!process.env.MEDIACOM_USER || !process.env.MEDIACOM_PASS)
   throw new Error("Mediacom User ID and Password must be set");
 
-if (!process.env.MEDIACOM_USER.includes("@mediacombb.net"))
-  throw new Error(
-    "Mediacom User ID must be in the form of <username>@mediacombb.net"
-  );
-
 const username = process.env.MEDIACOM_USER;
 const password = process.env.MEDIACOM_PASS;
 
