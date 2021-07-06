@@ -4,8 +4,6 @@ This package is used to scrape the usage data from mediacom's website.
 
 #### Example usage:
 
-##### Note: username must include @mediacombb.net
-
 ```
 docker run --rm \
 -e MEDIACOM_USER=<username> \
