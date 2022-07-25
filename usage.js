@@ -10,16 +10,16 @@ const password = process.env.MEDIACOM_PASS;
 (async () => {
   try {
     const browser = await puppeteer.launch({
-      // headless: true,
+      headless: false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
 
     await Promise.all([
       page.waitForSelector("button[ng-click='GoToSSO()']"),
-      page.goto("https://support.mediacomcable.com/#!/Login", {
-        waitUntil: "domcontentloaded",
-      }),
+      page.goto(
+        "https://support.mediacomcable.com/#!/Log/In?redirect=Account.Dashboard-%7B%7D"
+      ),
     ]);
 
     await Promise.all([
@@ -36,7 +36,7 @@ const password = process.env.MEDIACOM_PASS;
 
     await Promise.all([
       page.click("#btnSignIn"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      page.waitForNavigation({ waitUntil: "networkidle2" }),
     ]);
 
     const total = await page.evaluate(() =>
