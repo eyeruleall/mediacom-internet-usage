@@ -14,29 +14,28 @@ const password = process.env.MEDIACOM_PASS;
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(60000);
 
     await Promise.all([
-      page.waitForSelector("button[ng-click='GoToSSO()']"),
-      page.goto(
-        "https://support.mediacomcable.com/#!/Log/In?redirect=Account.Dashboard-%7B%7D"
-      ),
+      await page.goto("https://support.mediacomcable.com"),
+      await page.waitForSelector("button[ng-click='GoToSSO()']"),
     ]);
 
     await Promise.all([
-      page.waitForSelector('input[name="pf.username"]'),
-      page.waitForSelector('input[name="pf.pass"]'),
-      page.waitForSelector("#btnSignIn"),
-      page.click("button[ng-click='GoToSSO()']"),
+      await page.hover("button[ng-click='GoToSSO()']"),
+      await page.click("button[ng-click='GoToSSO()']"),
+      await page.waitForSelector('input[name="pf.username"]'),
+      await page.waitForSelector('input[name="pf.pass"]'),
+      await page.waitForSelector("#btnSignIn"),
     ]);
 
     await Promise.all([
       await page.type('input[name="pf.username"]', username),
       await page.type('input[name="pf.pass"]', password),
-    ]);
-
-    await Promise.all([
-      page.click("#btnSignIn"),
-      page.waitForNavigation({ waitUntil: "networkidle2" }),
+      await page.click("#btnSignIn"),
+      await page.waitForSelector(
+        "internet-usage-circle > div:nth-child(1) > div > div > div > span"
+      ),
     ]);
 
     const total = await page.evaluate(() =>
