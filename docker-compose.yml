@@ -3,7 +3,7 @@ services:
   mediacom-usage:
     build: "."
     container_name: mediacom-usage
-    env_file: .env
-    # environment:
-    #   - MEDIACOM_USER=<username>@mediacombb.net
-    #   - MEDIACOM_PASS=<password>
+    # env_file: .env
+    environment:
+      - ACCOUNT_NUMBER=<account_number>
+      - ZIP_CODE=<zip_code>

@@ -1,76 +1,54 @@
 require("dotenv").config();
-const puppeteer = require("puppeteer");
+const axios = require("axios").default;
 
-if (!process.env.MEDIACOM_USER || !process.env.MEDIACOM_PASS)
-  throw new Error("Mediacom User ID and Password must be set");
+if (!process.env.ACCOUNT_NUMBER || !process.env.ZIP_CODE)
+  throw new Error("Mediacom Account Number and Zip Code must be set");
 
-const username = process.env.MEDIACOM_USER;
-const password = process.env.MEDIACOM_PASS;
+const accountNumber = process.env.ACCOUNT_NUMBER;
+const zipCode = process.env.ZIP_CODE;
 
-(async () => {
-  try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(60000);
+async function start() {
+  const response = await axios.postForm(
+    "https://mediacom.openvault.us/csr/accountQuery.action",
+    {
+      accountNumber,
+      zipCode,
+      x: 26,
+      y: 16,
+    }
+  );
 
-    await Promise.all([
-      await page.goto("https://support.mediacomcable.com"),
-      await page.waitForSelector("button[ng-click='GoToSSO()']"),
-    ]);
+  const webpage = response.data.toString();
 
-    await Promise.all([
-      await page.hover("button[ng-click='GoToSSO()']"),
-      await page.click("button[ng-click='GoToSSO()']"),
-      await page.waitForSelector('input[name="pf.username"]'),
-      await page.waitForSelector('input[name="pf.pass"]'),
-      await page.waitForSelector("#btnSignIn"),
-    ]);
+  const percentLine = webpage.match(/<span class="subTitleRed">\d*%/)[0];
+  const percent = percentLine.substring(26, percentLine.indexOf("%"));
 
-    await Promise.all([
-      await page.type('input[name="pf.username"]', username),
-      await page.type('input[name="pf.pass"]', password),
-      await page.click("#btnSignIn"),
-      await page.waitForSelector(
-        "internet-usage-circle > div:nth-child(1) > div > div > div > span"
-      ),
-    ]);
+  const allowedLine = webpage.match(/max: \d+,/)[0];
+  const allowed = allowedLine.substring(5, allowedLine.indexOf(","));
 
-    const total = await page.evaluate(() =>
-      document.querySelector("internet-usage-circle").getAttribute("used")
-    );
-    const allowed = await page.evaluate(() =>
-      document.querySelector("internet-usage-circle").getAttribute("total")
-    );
+  const uploadLine = webpage.match(
+    /usageCurrentUpData\.push\([1-9]\d*(\.\d+)?\)/
+  )[0];
+  const upload = uploadLine.substring(24, uploadLine.indexOf(")"));
 
-    const percent = await page.evaluate(
-      () =>
-        document.querySelector(
-          "internet-usage-circle > div:nth-child(1) > div > div > div > span"
-        ).innerHTML
-    );
+  const downloadLine = webpage.match(
+    /usageCurrentDnData\.push\([1-9]\d*(\.\d+)?\)/
+  )[0];
+  const download = downloadLine.substring(24, downloadLine.indexOf(")"));
 
-    const updown = await page.evaluate(() =>
-      document.querySelector("internet-usage-circle").getAttribute("updown")
-    );
-    const updownData = JSON.parse(updown);
+  const totalLine = webpage.match(
+    /usageCurrentData\.push\([1-9]\d*(\.\d+)?\)/
+  )[0];
+  const total = totalLine.substring(22, totalLine.indexOf(")"));
 
-    const download = updownData.TotalDnOctetsTxt;
-    const upload = updownData.TotalUpOctetsTxt;
-
-    await browser.close();
-
-    const response = `{
+  const result = `{
   percent: ${parseInt(percent)},
   allowed: ${parseInt(allowed)},
-  upload: ${parseInt(upload)},
-  download: ${parseInt(download)},
-  total: ${parseInt(total)},
+  upload: ${parseFloat(upload)},
+  download: ${parseFloat(download)},
+  total: ${parseFloat(total)},
 }`;
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
-})();
+  console.log(result);
+}
+
+start();

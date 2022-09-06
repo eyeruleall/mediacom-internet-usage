@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/eyeruleall/mediacom-internet-usage#readme",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "puppeteer": "^5.5.0"
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.15"
   }
 }

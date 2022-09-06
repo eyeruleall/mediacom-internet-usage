@@ -6,8 +6,8 @@ This package is used to scrape the usage data from mediacom's website.
 
 ```
 docker run --rm \
--e MEDIACOM_USER=<username> \
--e MEDIACOM_PASS=<password> \
+-e ACCOUNT_NUMBER=<account_number> \
+-e ZIP_CODE=<zip_code> \
 eyeruleall/mediacom-internet-usage
 ```
 
