@@ -27,17 +27,17 @@ async function start() {
   const allowed = allowedLine.substring(5, allowedLine.indexOf(","));
 
   const uploadLine = webpage.match(
-    /usageCurrentUpData\.push\([1-9]\d*(\.\d+)?\)/
+    /usageCurrentUpData\.push\([0-9]\d*(\.\d+)?\)/
   )[0];
   const upload = uploadLine.substring(24, uploadLine.indexOf(")"));
 
   const downloadLine = webpage.match(
-    /usageCurrentDnData\.push\([1-9]\d*(\.\d+)?\)/
+    /usageCurrentDnData\.push\([0-9]\d*(\.\d+)?\)/
   )[0];
   const download = downloadLine.substring(24, downloadLine.indexOf(")"));
 
   const totalLine = webpage.match(
-    /usageCurrentData\.push\([1-9]\d*(\.\d+)?\)/
+    /usageCurrentData\.push\([0-9]\d*(\.\d+)?\)/
   )[0];
   const total = totalLine.substring(22, totalLine.indexOf(")"));
 
